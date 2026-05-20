@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老肉雜談：自然與生物科普學習庫 - 學生專屬互動平台</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked.js (Markdown Parser) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- MathJax for rendering LaTeX formulas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <!-- Custom styling & transitions -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        /* Scrollbar customizing */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+        /* 3D Card Flip effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fbf9',
+                            100: '#dcf6f1',
+                            500: '#0d9488',
+                            600: '#0f766e',
+                            700: '#115e59',
+                            DEFAULT: '#0d9488'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+    <!-- APP HEADER -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-teal-500 text-white rounded-xl shadow-md shadow-teal-500/20">
+                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent dark:from-teal-400 dark:to-emerald-300">
+                        老肉雜談
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">學生自然科學探索與 AI 對話平台</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <nav class="hidden md:flex space-x-1 text-sm font-medium">
+                    <a href="#workspace" class="px-3 py-2 text-teal-600 dark:text-teal-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        知識工作區
+                    </a>
+                    <a href="#flashcards-section" class="px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        翻轉字卡
+                    </a>
+                    <a href="#quiz-section" class="px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        挑戰評測
+                    </a>
+                    <a href="#faq" class="px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        常見答問
+                    </a>
+                </nav>
+
+                <!-- Action group -->
+                <div class="flex items-center space-x-2 border-l border-slate-200 dark:border-slate-800 pl-4">
+                    <!-- Light / Dark Mode Toggle -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800" title="切換主題">
+                        <i id="theme-icon" data-lucide="moon" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Settings Modal Trigger -->
+                    <button onclick="openSettings()" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800" title="設定 Gemini API">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION & DASHBOARD -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-gradient-to-r from-teal-500/10 via-emerald-500/5 to-transparent border border-teal-500/20 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm mb-8">
+            <div class="max-w-2xl">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 mb-4">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1 text-teal-500"></i> 本週主推：極端生命與生存智慧
+                </span>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+                    把生澀的生物學，變成最過癮的故事
+                </h2>
+                <p class="mt-3 text-lg text-slate-600 dark:text-slate-300">
+                    結合《老肉雜談》科普影音精華、LaTeX 精緻學術公式與強大的 Gemini 2.5 雙向對話系統。在這裡，你將與水熊蟲、捕蠅草、駱駝和科莫多巨蜥開啟跨越維度的科學探索！
+                </p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a href="#workspace" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-lg shadow-teal-600/20 transition flex items-center space-x-2">
+                        <span>進入互動工作區</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#quiz-section" class="px-5 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-medium rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                        挑戰科學 Quiz
+                    </a>
+                </div>
+            </div>
+            <!-- Interactive stats widgets -->
+            <div class="grid grid-cols-2 gap-4 w-full md:w-auto max-w-sm">
+                <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-5 rounded-2xl shadow-sm text-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">精選科普主題</p>
+                    <p class="text-3xl font-extrabold text-teal-600 dark:text-teal-400 mt-1">15+</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">涵蓋動植物與適應性</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-5 rounded-2xl shadow-sm text-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">測驗累計得分</p>
+                    <p id="total-score-badge" class="text-3xl font-extrabold text-amber-500 mt-1">0</p>
+                    <p id="score-badge-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-2">科學新手</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKSPACE SECTION (Split Pane Layout) -->
+    <main id="workspace" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mb-12">
+        <h3 class="text-2xl font-bold mb-6 flex items-center text-slate-900 dark:text-white">
+            <i data-lucide="layers" class="w-6 h-6 mr-2 text-teal-500"></i> NotebookLM 互動學習工作區
+        </h3>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Pane: Library & Document Viewer (cols-7) -->
+            <section class="lg:col-span-7 flex flex-col space-y-6">
+                
+                <!-- Category Select & Search -->
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row gap-4 items-center">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-1/2">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="topic-search" oninput="filterTopics()" placeholder="搜尋科學主題或關鍵字..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+                    </div>
+                    <!-- Category Filters -->
+                    <div class="flex flex-wrap gap-2 w-full sm:w-1/2 justify-start sm:justify-end">
+                        <button onclick="setCategoryFilter('all')" id="cat-btn-all" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-teal-500 text-white transition">
+                            全部
+                        </button>
+                        <button onclick="setCategoryFilter('動物')" id="cat-btn-動物" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                            動物奇觀
+                        </button>
+                        <button onclick="setCategoryFilter('植物')" id="cat-btn-植物" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                            開掛植物
+                        </button>
+                        <button onclick="setCategoryFilter('科學')" id="cat-btn-科學" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                            生存與食品科學
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Horizontal Topic Selector (Carousel of Cards) -->
+                <div class="relative">
+                    <div id="topics-grid" class="flex space-x-4 overflow-x-auto pb-4 pt-1 snap-x scroll-smooth">
+                        <!-- Dynamic content filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Document Reader Display (The Selected Science Topic) -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+                    <div class="border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 px-6 py-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="p-1.5 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-lg">
+                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                            </span>
+                            <span class="text-xs uppercase tracking-wider font-extrabold text-teal-600 dark:text-teal-400" id="reader-category">植物世界</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="exportStudyGuide()" class="flex items-center space-x-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                <span>導出 Markdown 筆記</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Content view body -->
+                    <div class="p-6 overflow-y-auto max-h-[500px]" id="reader-content-body">
+                        <!-- Selected topic loaded dynamically here -->
+                        <h4 class="text-2xl font-black mb-3" id="reader-title">載入中...</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6" id="reader-summary">導讀與影片摘要...</p>
+                        
+                        <!-- Core concepts (LaTeX rendering targets) -->
+                        <div class="mb-6">
+                            <h5 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 flex items-center">
+                                <i data-lucide="award" class="w-4 h-4 mr-1"></i> 核心科學概念 (LaTeX 排版)
+                            </h5>
+                            <div class="space-y-4" id="reader-concepts">
+                                <!-- Dynamic concepts -->
+                            </div>
+                        </div>
+
+                        <!-- Fun facts -->
+                        <div>
+                            <h5 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 flex items-center">
+                                <i data-lucide="help-circle" class="w-4 h-4 mr-1"></i> 課外科普冷知識
+                            </h5>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-300" id="reader-facts">
+                                <!-- Dynamic fun facts -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Right Pane: AI Q&A Assistant (cols-5) -->
+            <section class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col h-[740px] overflow-hidden">
+                <!-- Chat Head -->
+                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-10 h-10 bg-teal-600 text-white rounded-xl flex items-center justify-center font-bold">
+                                AI
+                            </div>
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-800 rounded-full"></span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold">科普助手「老肉」</h4>
+                            <p class="text-xs text-slate-400" id="chat-mode-label">本地知識庫智商模式</p>
+                        </div>
+                    </div>
+                    <!-- Mode switch toggles -->
+                    <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-700 p-1 rounded-lg text-xs">
+                        <button onclick="setAIMode('local')" id="mode-btn-local" class="px-2 py-1 font-semibold rounded-md bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 shadow-sm transition">
+                            本地
+                        </button>
+                        <button onclick="setAIMode('gemini')" id="mode-btn-gemini" class="px-2 py-1 font-semibold rounded-md text-slate-500 dark:text-slate-300 hover:text-slate-700 transition flex items-center space-x-1">
+                            <span>Gemini</span>
+                            <span class="w-1.5 h-1.5 bg-teal-400 rounded-full animate-pulse"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages list -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-messages-container">
+                    <!-- Welcome message -->
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
+                            肉
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-[85%] text-sm">
+                            哈囉！我是科普講述人老肉。我已經把仙人掌、水熊蟲、蜂鳥、捕蠅草、辣椒等自然界奇妙生命的所有核心知識都載入了！
+                            <br><br>
+                            你可以隨時問我相關的問題。比如你可以點選下方的「熱門提問」，或輸入你想探討的科學機制！
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Prompts suggestions (Context Aware) -->
+                <div class="px-4 py-2 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold mb-2">當前主題熱門提問：</p>
+                    <div class="flex flex-wrap gap-1.5" id="chat-quick-questions">
+                        <!-- Loaded according to chosen topic -->
+                    </div>
+                </div>
+
+                <!-- Chat input -->
+                <div class="p-4 border-t border-slate-100 dark:border-slate-700">
+                    <form onsubmit="handleUserSubmitMessage(event)" class="flex items-center space-x-2">
+                        <input type="text" id="chat-input" placeholder="對老肉發問（例如：為什麼捕蠅草不會亂閉合？）..." class="flex-1 px-4 py-3 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+                        <button type="submit" class="p-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl shadow-md shadow-teal-600/20 transition shrink-0">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- INTERACTIVE FLASHCARDS & VOCABULARY SECTION -->
+    <section id="flashcards-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200 dark:border-slate-800">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+            <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white flex items-center justify-center">
+                <i data-lucide="credit-card" class="w-8 h-8 mr-2 text-teal-500"></i> 3D 科學字卡（Flashcards）
+            </h3>
+            <p class="mt-3 text-slate-500 dark:text-slate-400">
+                點擊卡片即可將其翻轉，背誦並熟悉核心生物學與自然界機制，助你掌握頂級學生科學腦！
+            </p>
+        </div>
+
+        <div class="flex flex-col items-center justify-center space-y-6">
+            <!-- Flashcard Frame (Flip container) -->
+            <div onclick="flipCurrentCard()" class="perspective-1000 w-full max-w-lg h-72 cursor-pointer group">
+                <div id="flashcard-inner" class="preserve-3d relative w-full h-full duration-500 transform">
+                    <!-- Front Side -->
+                    <div class="absolute inset-0 w-full h-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8 flex flex-col justify-between shadow-lg backface-hidden">
+                        <div class="flex items-center justify-between">
+                            <span id="card-category" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">隱生與極限生命</span>
+                            <span class="text-xs text-slate-400 flex items-center">
+                                <i data-lucide="rotate-3d" class="w-3.5 h-3.5 mr-1"></i> 點擊卡片翻轉
+                            </span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <h4 id="card-term" class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">隱生機制 (Cryptobiosis)</h4>
+                        </div>
+                        <div class="text-xs text-center text-slate-400 font-medium">老肉雜談：水熊蟲篇</div>
+                    </div>
+
+                    <!-- Back Side -->
+                    <div class="absolute inset-0 w-full h-full bg-teal-600 dark:bg-teal-800 border border-teal-500 rounded-3xl p-8 flex flex-col justify-between shadow-lg backface-hidden rotate-y-180 text-white">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-teal-500/30">解答定義</span>
+                            <span class="text-xs text-teal-200 flex items-center">
+                                <i data-lucide="rotate-3d" class="w-3.5 h-3.5 mr-1"></i> 點擊卡片反轉
+                            </span>
+                        </div>
+                        <div class="text-center my-auto px-4">
+                            <p id="card-definition" class="text-base font-semibold leading-relaxed">
+                                當環境極度惡劣時（如乾燥、缺氧、低溫），水熊蟲會將體內水分脫去 97%，新陳代謝率降到正常值的萬分之一，形成類似死亡但可隨時遇水復甦的隱形生命狀態。
+                            </p>
+                        </div>
+                        <div class="text-xs text-center text-teal-200 font-medium">老肉雜談：水熊蟲篇</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center space-x-4">
+                <button onclick="prevFlashcard()" class="p-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition shadow-sm">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </button>
+                <span id="flashcard-index" class="text-sm font-bold text-slate-500 dark:text-slate-400">1 / 10</span>
+                <button onclick="nextFlashcard()" class="p-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition shadow-sm">
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SELF-ASSESSMENT QUIZ & BADGE CENTER -->
+    <section id="quiz-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 rounded-3xl mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left: Badge Showcase (cols-4) -->
+            <div class="lg:col-span-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
+                <h4 class="text-lg font-bold mb-4">學生科學家徽章</h4>
+                <div class="flex flex-col items-center space-y-4">
+                    <div id="badge-icon-frame" class="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-4xl shadow-inner transition duration-500">
+                        🌱
+                    </div>
+                    <div>
+                        <h5 id="badge-title" class="font-bold text-slate-800 dark:text-white text-base">科學新手</h5>
+                        <p id="badge-desc" class="text-xs text-slate-400 mt-1">累計答對 0 題科學測驗</p>
+                    </div>
+                </div>
+                <div class="mt-6 border-t border-slate-100 dark:border-slate-700 pt-4 text-left">
+                    <p class="text-xs text-slate-400 font-bold uppercase mb-2">可解鎖徽章清單：</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-2 text-xs">
+                            <span class="text-sm">🌱</span>
+                            <span class="font-medium text-slate-600 dark:text-slate-300">科學新手 (得分 0+)</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs">
+                            <span class="text-sm">🦎</span>
+                            <span class="font-medium text-slate-600 dark:text-slate-300">荒野探險家 (得分 40+)</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs">
+                            <span class="text-sm">🌌</span>
+                            <span class="font-medium text-slate-600 dark:text-slate-300">地表最強腦 (得分 80+)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Dynamic Quiz Portal (cols-8) -->
+            <div class="lg:col-span-8 bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm min-h-[380px] flex flex-col justify-between">
+                <div id="quiz-intro-state">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 inline-block mb-3">
+                        科普大作戰
+                    </span>
+                    <h4 class="text-2xl font-extrabold tracking-tight">自然科學評測中心</h4>
+                    <p class="mt-3 text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        我們基於老肉雜談的精華資料，為你動態生成了 5 道科學選擇題。這將測試你對植物光合作用、動物極致進化、器官特異機制的了解程度。每題答對可獲得 10 分！
+                    </p>
+                    <button onclick="startQuiz()" class="mt-6 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-md shadow-teal-600/20 transition flex items-center space-x-2">
+                        <span>開始 5 題科學挑戰</span>
+                        <i data-lucide="play" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div id="quiz-play-state" class="hidden flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+                            <span id="quiz-progress-text" class="font-bold text-teal-600 dark:text-teal-400">問題 1 / 5</span>
+                            <span id="quiz-current-points">當前得分：0</span>
+                        </div>
+                        <h4 id="quiz-question-text" class="text-lg font-bold text-slate-900 dark:text-white mb-6">
+                            載入問題中...
+                        </h4>
+                        <div class="space-y-3" id="quiz-options-container">
+                            <!-- Options filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button id="quiz-next-btn" onclick="nextQuizQuestion()" disabled class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 font-semibold rounded-xl transition flex items-center space-x-1">
+                            <span>下一題</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-result-state" class="hidden text-center py-6">
+                    <span class="text-5xl">🏆</span>
+                    <h4 class="text-2xl font-black text-slate-900 dark:text-white mt-4">測驗完成！</h4>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                        你在本次科普大作戰中獲得了：
+                    </p>
+                    <p id="quiz-result-points" class="text-4xl font-black text-teal-600 dark:text-teal-400 mt-2">0 / 50 分</p>
+                    <p id="quiz-feedback-text" class="text-sm text-slate-600 dark:text-slate-300 mt-4 px-8 leading-relaxed">
+                        非常好！你展現了對大自然的探索精神。繼續加油解鎖最高級的科學徽章吧！
+                    </p>
+                    <button onclick="resetQuiz()" class="mt-6 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-semibold text-sm transition inline-flex items-center space-x-1">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重新挑戰</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CORE SCIENTIFIC KNOWLEDGE FAQ SECTION -->
+    <section id="faq" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200 dark:border-slate-800">
+        <div class="text-center mb-8">
+            <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center justify-center">
+                <i data-lucide="info" class="w-6 h-6 mr-2 text-teal-500"></i> 科學原理 常見精華解惑 (FAQ)
+            </h3>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                點擊各項，深入理解大自然神奇機制底層的生物與物理科學邏輯
+            </p>
+        </div>
+
+        <div class="space-y-4" id="faq-accordion-container">
+            <!-- FAQ 1 -->
+            <div class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl overflow-hidden transition">
+                <button onclick="toggleFAQ(1)" class="w-full px-6 py-4 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                    <span>1. 為什麼說 $C_4$ 光合作用像是在幫植物「開單間特供」？</span>
+                    <i id="faq-chevron-1" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                </button>
+                <div id="faq-content-1" class="hidden px-6 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+                    普通 $C_3$ 植物在高溫乾燥下，氣孔關閉會造成光呼吸（消耗能量卻不產生糖）。而 $C_4$ 植物（如甘蔗、玉米）則極為巧妙，在葉肉細胞利用二氧化碳合成四碳化合物（草醯乙酸），接著運送到微管束鞘細胞才釋放二氧化碳，這相當於給「卡爾文循環」開了個單間，確保內部高濃度二氧化碳，避開了光呼吸的能量浪費，效率因而暴增。
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl overflow-hidden transition">
+                <button onclick="toggleFAQ(2)" class="w-full px-6 py-4 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                    <span>2. 捕蠅草是如何不依靠大腦和神經元記住「20 秒」時間的？</span>
+                    <i id="faq-chevron-2" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                </button>
+                <div id="faq-content-2" class="hidden px-6 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+                    這背後是精妙的化學離子物理計時機制。當捕蠅草的感覺毛被昆蟲碰觸一次時，細胞會開啟離子通道釋放鈣離子（$\text{Ca}^{2+}$），使葉片內鈣離子濃度升高。如果碰觸停止，鈣離子濃度會以恆定速率緩慢下降。如果 20 秒之內發生第二次碰觸，第二次釋放的鈣離子疊加後即可突破啟動閾值，觸發雙穩態反扣物理彈性閉合。若超過 20 秒，濃度過低，便會被判定為風吹、落葉等干擾。
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl overflow-hidden transition">
+                <button onclick="toggleFAQ(3)" class="w-full px-6 py-4 flex items-center justify-between text-left font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                    <span>3. 為什麼辣覺本質上是「痛覺與熱覺」而非真正的味覺？</span>
+                    <i id="faq-chevron-3" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                </button>
+                <div id="faq-content-3" class="hidden px-6 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+                    辣椒素會直接結合全身上下（包含皮膚、黏膜）存在的 $\text{TRPV1}$ 受體。該受體原先是用於大腦偵測溫度的「報警系統」（高於 $43^\circ\text{C}$ 時啟動以防止燙傷）。辣椒素「欺騙」了 $\text{TRPV1}$，讓大腦產生烈火灼燒般的痛覺。作為回饋，腦下垂體會分泌「內啡肽」來補償和鎮痛，帶來一種暢快、快活的微虐爽感，進而讓人類集體上癮。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <p class="text-sm font-semibold text-slate-200">
+                老肉雜談：自然與生物科普學習庫 &copy; 2026 年
+            </p>
+            <p class="text-xs max-w-md mx-auto">
+                專為學生設計的響應式沉浸科普學習系統。所有概念皆提煉自野生動物、驚奇植物與食品加工科技。
+            </p>
+            <div class="flex items-center justify-center space-x-4 text-xs">
+                <a href="#workspace" class="hover:text-teal-400">知識庫</a>
+                <span>&bull;</span>
+                <a href="#flashcards-section" class="hover:text-teal-400">科學字卡</a>
+                <span>&bull;</span>
+                <a href="#quiz-section" class="hover:text-teal-400">自我評估</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SETTINGS MODAL (Gemini API Config) -->
+    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl border border-slate-100 dark:border-slate-700 shadow-xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                <h4 class="font-bold flex items-center text-slate-900 dark:text-white">
+                    <i data-lucide="cpu" class="w-5 h-5 mr-2 text-teal-500"></i> Gemini API 設定
+                </h4>
+                <button onclick="closeSettings()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    本系統支援直接調用 <span class="font-semibold text-slate-700 dark:text-slate-200">Gemini 2.5 Flash Preview</span> 模型。在執行環境中，API Key 會自動注入（保持下方輸入框空白即可）。你也可以在此輸入自備金鑰：
+                </p>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Gemini API Key</label>
+                    <input type="password" id="api-key-input" placeholder="留空以使用平台預設安全金鑰..." class="w-full px-4 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="p-3 bg-teal-50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900 text-teal-800 dark:text-teal-300 rounded-xl text-xs space-y-1">
+                    <p class="font-bold">🔑 自動安全保護規章</p>
+                    <p>我們採用指數退避機制（重試最多 5 次）保護每一次連線，且問答脈絡將限制於老肉精華文稿中，以防止幻覺。</p>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-850 flex justify-end space-x-2">
+                <button onclick="closeSettings()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold hover:bg-slate-300 transition">
+                    關閉
+                </button>
+                <button onclick="saveSettings()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-teal-600/10 transition">
+                    儲存變更
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Custom Toast Notifications -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- SCIENCE TRANSCRIPT MASTER DATA -->
+    <script>
+        const LaoRouDataset = [
+            {
+                id: "tardigrade",
+                title: "水熊蟲的隱生機制與太空挑戰",
+                category: "動物",
+                difficulty: "Hard",
+                summary: "介紹地球最強悍生命「水熊蟲」，深入探討其脫水隱生、海藻糖調控、以及抵抗絕對零度、高壓、宇宙輻射的底層科學機制，揭秘太空曝露實驗的真實數據。",
+                concepts: [
+                    {
+                        name: "隱生狀態 (Cryptobiosis)",
+                        desc: "水熊蟲在極端環境下可自主脫水達 \\(97\%\\)，新陳代謝率降到正常水準的 \\(1/10000\\)。此時細胞內部像凝膠般鎖定，停止所有代謝作用以維持基因穩定。"
+                    },
+                    {
+                        name: "海藻糖 (Trehalose)",
+                        desc: "脫水時體內產生的特異二醣化合物。它能完美代替細胞中水分子的空間與氫鍵，防止細胞膜、蛋白質發生不可逆扭曲、崩潰與斷裂。"
+                    },
+                    {
+                        name: "Dsup 保護蛋白 (Damage Suppressor)",
+                        desc: "科學家在水熊蟲體內發現的獨有核蛋白。它能在 DNA 外部包覆一層「物理防護罩」，阻擋宇宙高能射線、伽馬輻射與自由基造成的鏈條斷裂。"
+                    }
+                ],
+                funFacts: [
+                    "在絕對零度 \\(-273^\circ\text{C}\\) 下水熊蟲也凍不死，能存活數分鐘至數小時。",
+                    "2007年外太空實驗證明：真空對隱生水熊蟲幾乎無害，但無臭氧防護的超強紫外輻射 (UVC) 仍會導致絕大多數個體 DNA 壞死。",
+                    "科學家已成功將水熊蟲的 Dsup 基因編輯入人類細胞，實驗發現可使人類細胞抗輻射傷害能力提高 \\(40\%\\)。"
+                ],
+                qa: [
+                    { q: "水熊蟲真的可以在太空中繁衍生活嗎？", a: "不行。這是一個常見誤解。水熊蟲只能在「脫水隱生」的死寂狀態下在太空環境「保命」存活，一旦有紫外線 UVC 曝露，其存活率依然會降至極低，更不可能在太空中正常進食與繁殖。" },
+                    { q: "水熊蟲最怕什麼？", a: "水熊蟲在「活動狀態」下非常脆弱，跟普通微型蟲一樣容易被開水燙死、被壓死或被掠食者吞食。唯有緩慢乾燥「脫水」後，它才具備無敵的抗性。" }
+                ],
+                quickQuestions: [
+                    "什麼是海藻糖機制？",
+                    "Dsup 蛋白如何應用在人類基因中？",
+                    "水熊蟲 2007 年太空實驗的真相是什麼？"
+                ]
+            },
+            {
+                id: "flytrap",
+                title: "捕蠅草的動作電位與記憶記憶",
+                category: "植物",
+                difficulty: "Medium",
+                summary: "達爾文眼中「地表最神奇的植物」！詳解捕蠅草如何利用鈣離子濃度進行 20 秒「短暫記憶」，利用葉片內外側細胞水壓改變實現 0.1 秒極速閉合的物理機制。",
+                concepts: [
+                    {
+                        name: "動作電位 (Action Potential)",
+                        desc: "捕蠅草無大腦與神經，但感覺毛被碰觸時會產生電位差，釋放信號給葉片周邊細胞，引發化學離子流動。"
+                    },
+                    {
+                        name: "鈣離子計時鐘 ($\\text{Ca}^{2+}$ Clock)",
+                        desc: "碰觸一次釋放部分 \\(\\text{Ca}^{2+}\\)，若 20 秒內沒有第二次刺激，\\(\\text{Ca}^{2+}\\) 濃度會降回基準。若 20 秒內再被碰觸一次，濃度疊加超越閾值，陷阱立即引爆。"
+                    },
+                    {
+                        name: "雙穩態結構 (Bistable Elastomer)",
+                        desc: "捕蠅草葉片類似雨傘反扣。平時內外側細胞處於高水壓緊繃狀態。一旦電位激發，內側細胞極速失水，外側細胞膨脹釋放累積彈性，實現 \\(0.1\\) 秒閉合。"
+                    }
+                ],
+                funFacts: [
+                    "野外捕蠅草主食是螞蟻 (33%)、蜘蛛 (30%)，會飛的蒼蠅其實佔不到 5%。",
+                    "捕蠅草閉合後，需要獵物持續掙扎觸發 3 次以上信號，才會判定為活物並開始分泌消化液，否則 12 小時內會重新張開（防誤判機制）。",
+                    "捕蠅草與毛膏菜是近親，由古老黏蠅紙類型的捕蟲草演化而來。"
+                ],
+                qa: [
+                    { q: "捕蠅草會因為雨水滴落而一直亂關閉嗎？", a: "不會。這就是它的「雙重確認計時機制」。雨滴只會偶爾敲擊感覺毛一次，在 20 秒內很難剛好再次碰觸同一根毛。即使因為大暴雨發生誤關閉，在沒有昆蟲掙扎信號的情況下，它也不會分泌消化液浪費能量，而是會在半天內重新張開。" },
+                    { q: "捕蠅草的演化動力是什麼？", a: "它生長的美國東部沼澤極度貧瘠、呈酸性且缺乏氮（N）和磷（P）。為了獲取這些關鍵營養素，它不得不捨棄部分光合作用面積，演化出捕捉昆蟲、吸收氨基酸的食肉行為。" }
+                ],
+                quickQuestions: [
+                    "如何用物理學雨傘效應解釋捕蠅草閉合？",
+                    "捕蠅草如何防範落葉干擾？",
+                    "它與毛膏菜的演化關係？"
+                ]
+            },
+            {
+                id: "camel",
+                title: "駱駝征服沙漠的開源節流機制",
+                category: "科學",
+                difficulty: "Medium",
+                summary: "剖析「沙漠之舟」駱駝被嚴重低估的家畜實力。探討橢圓形可膨脹紅血球、鼻腔逆流冷卻、以及主動調控體溫的極致省水特異生理構造。",
+                concepts: [
+                    {
+                        name: "橢圓形彈性紅血球 (Oval RBCs)",
+                        desc: "不同於人類的圓盤狀，駱駝紅血球呈橢圓形，具極強彈性。在極度缺水、血液濃稠時仍能暢行無阻；在暴飲水 \\(10\\) 分鐘吞入 \\(150\\text{L}\\) 水分時，能膨脹 \\(2.4\\) 倍而不破裂。"
+                    },
+                    {
+                        name: "鼻腔逆流熱交換 (Countercurrent Exchange)",
+                        desc: "鼻腔黏膜為多褶皺螺旋狀（培根卷）。呼氣時將肺部呼出的溫熱飽和水蒸氣凝結回收；吸氣時利用水分蒸發吸熱，使進入大腦的動脈血獲得有效冷卻。"
+                    },
+                    {
+                        name: "主動式體溫波動 (Adaptive Heterothermy)",
+                        desc: "為減少出汗省水，駱駝在白天可任由體溫上升到 \\(40^\circ\text{C}\\) 而不出汗，夜晚降到 \\(34^\circ\text{C}\\)。體溫可隨環境在 \\(6^\circ\text{C}\\) 內波動，堪稱恆溫動物的另類。"
+                    }
+                ],
+                funFacts: [
+                    "駝峰裝的不是水，而是高能量密度脂肪。脂肪代謝雖產生水，但也需要呼吸消耗大量氧氣，並非主要省水源。",
+                    "駱駝的尿液濃稠如糖漿，糞便乾燥到能直接拿來生火當燃料。",
+                    "其口腔內部密佈堅硬的角蛋白尖刺，連佈滿長刺的仙人掌都能直接嚼碎吞下。"
+                ],
+                qa: [
+                    { q: "駱駝不吃不喝能活多久？", a: "在完全不吃不喝的極端情況下，駱駝依然可以存活長達兩個月左右，這主要得益於它駝峰中的脂肪儲備，以及極高效率的生理節水機制。" },
+                    { q: "駱駝是怎麼在沙漠找到水源的？", a: "駱駝具備極靈敏的嗅覺，甚至能夠聞到幾公里外沙土中某些特定放線菌產生的土腥味，並藉此在風向引導下精準找到隱秘的水源。" }
+                ],
+                quickQuestions: [
+                    "為什麼人類不能像駱駝那樣快速喝水？",
+                    "駝峰的脂肪如何轉換為能量？",
+                    "駱駝嘴裡的角蛋白尖刺起什麼作用？"
+                ]
+            },
+            {
+                id: "pepper",
+                title: "辣椒的痛覺欺騙與內啡肽補償",
+                category: "科學",
+                difficulty: "Easy",
+                summary: "探索為什麼全人類會對「辣椒」這種自虐痛覺上癮？揭露辣椒素刺激 TRPV1 熱敏感官受體，並驅使大腦分泌內啡肽補償，從而引發「集體上癮」的奇妙心理與生理真相。",
+                concepts: [
+                    {
+                        name: "TRPV1 受體 (Transient Receptor Potential)",
+                        desc: "人體感知高於 \\(43^\circ\text{C}\\) 溫度（防止燙傷）的熱敏通道受體。辣椒素能精準結合該通道，模擬高熱信號，在無實際灼傷下持續欺騙大腦。"
+                    },
+                    {
+                        name: "內啡肽報酬機制 (Endorphin Compensation)",
+                        desc: "大腦收到 \\(\text{TRPV1}\\) 受體傳遞的「嚴重燙傷」痛覺信號後，會啟動保護機制，釋放內啡肽鎮痛。內啡肽是一種內源性嗎啡，能為人類帶來強烈快感與放鬆感。"
+                    },
+                    {
+                        name: "疏水性辣椒素分子 (Hydrophobic Capsaicin)",
+                        desc: "辣椒素是非極性有機分子，不溶於水（極性溶劑），但高度親油（非極性溶劑）與酒精，這解釋了為何喝水無法解辣。"
+                    }
+                ],
+                funFacts: [
+                    "辣椒素主要集中在辣椒內部的白筋（胎座），而非辣椒種子上。",
+                    "鳥類的 \\(\text{TRPV1}\\) 受體對辣椒素不敏感，因此能無感吃辣並幫助辣椒完整排泄傳播種子（演化防哺乳動物嚙咬機制）。",
+                    "全脂冰淇淋是極致解辣聖品：低溫關閉受體、脂肪溶解辣椒素、酪蛋白進行吸附、高糖分抵消痛覺。"
+                ],
+                qa: [
+                    { q: "為什麼喝冰白酒不能解辣？", a: "雖然酒精可以溶解辣椒素，但酒精（乙醇）會降低 TRPV1 受體被激發的閾值（從 43°C 降到 35°C 左右），這意味著連你體內正常的 37°C 體溫都會引發大腦燙傷報警，因此喝烈酒只會引發「辣上加辣」的慘劇。" },
+                    { q: "史科維爾指標（SHU）是怎麼測出來的？", a: "最早由化學家史科維爾發明：將辣椒精油提取物用糖水稀釋，直到幾名測試員完全嚐不出辣味，其糖水與樣品體積的稀釋倍數即為 SHU。現在則改用高效液相色譜法（HPLC）精準測量並換算。" }
+                ],
+                quickQuestions: [
+                    "鳥類吃辣椒為什麼不覺得辣？",
+                    "牛奶解辣的底層化學原理？",
+                    "什麼是史科維爾熱量指標 SHU？"
+                ]
+            },
+            {
+                id: "sugarcane",
+                title: "甘蔗與 C4 光合作用開掛",
+                category: "植物",
+                difficulty: "Hard",
+                summary: "世界上產量最高的農作物竟是甘蔗！本單元揭示甘蔗如何透過進化出 $C_4$ 光合作用（草醯乙酸與蘋果酸空間分離），在炎熱高溫環境下以驚人速度積累高濃度蔗糖，進而成功「馴化」人類。",
+                concepts: [
+                    {
+                        name: "C4 光合作用 (C4 Photosynthesis)",
+                        desc: "相較於普通 \\(C_3\\) 植物，\\(C_4\\) 植物將二氧化碳固定與卡爾文循環在葉肉細胞和微管束鞘細胞中空間分離。利用蘋果酸轉運二氧化碳，完美規避高溫下的光呼吸浪費。"
+                    },
+                    {
+                        name: "卡爾文循環 (Calvin Cycle)",
+                        desc: "光合作用的暗反應階段，植物吸收 \\(\text{CO}_2\\) 經由 RuBisCO 酶催化轉化為磷酸甘油酸等三碳化合物（\\(C_3\\)），進而合成蔗糖與澱粉。"
+                    },
+                    {
+                        name: "糖蜜與蘭姆酒 (Molasses & Rum)",
+                        desc: "甘蔗榨汁結晶出白糖後剩餘的黑褐色黏稠液體為糖蜜（富含多種營養素與焦糖）。17世紀水手與移民利用糖蜜發酵並蒸餾，發明了舉世聞名的蘭姆酒。"
+                    }
+                ],
+                funFacts: [
+                    "全球年產量最高的作物是甘蔗（近19億噸），玉米（12億噸）與小麥（8億噸）相加才勉強與甘蔗持平。",
+                    "人類並非必須吃純糖，提煉糖的歷史僅2000年。是甘蔗利用糖分綁架了人類味覺，促使人類砍伐雨林、開闢莊園為其播種。",
+                    "甘蔗有兩大用途分類：糖蔗（含糖量極高但果肉粗硬，專門製糖）與果蔗（鬆脆多汁，供直接啃咬食用）。"
+                ],
+                qa: [
+                    { q: "為什麼說不是人類馴化甘蔗，而是甘蔗馴化人類？", a: "從基因與演化成功度來看，甘蔗在地球上的總重量與播種面積因人類對甜味的偏愛而呈爆炸性增長。人類為甘蔗清理了大片熱帶雨林、引進大規模農業技術，這本質上也是植物利用人類的本能實現其基因極致繁衍的手段。" },
+                    { q: "紅糖與白糖有何不同？", a: "紅糖本質上就是加工程度較低的蔗糖。它含有完整的「糖蜜」成分，因而呈現焦糖色與特殊的甘蔗風味，保留了較多的維生素與微量元素，類似糙米與白米的關係。" }
+                ],
+                quickQuestions: [
+                    "C4 植物如何在高溫下維持高效率光合作用？",
+                    "糖蜜是怎麼變成清潔酒精燃料的？",
+                    "甘蔗與竹子在生物學上是一家人嗎？"
+                ]
+            }
+        ];
+
+        // Global App State
+        let currentTopicId = "tardigrade";
+        let aiMode = "local"; // 'local' or 'gemini'
+        let currentFlashcardIndex = 0;
+        let selectedCategoryFilter = "all";
+        let activeQuizQuestions = [];
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let userAPIKey = "";
+
+        // Initial setup on Window Load
+        window.onload = function() {
+            renderTopics();
+            loadTopicToReader(currentTopicId);
+            initFlashcards();
+            lucide.createIcons();
+            
+            // Try to load any saved state/settings from session storage
+            const savedKey = sessionStorage.getItem("gemini_api_key");
+            if (savedKey) {
+                userAPIKey = savedKey;
+                document.getElementById("api-key-input").value = savedKey;
+            }
+        };
+
+        // Dark mode Toggle helper
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById("theme-icon");
+            if (html.classList.contains("dark")) {
+                html.classList.remove("dark");
+                themeIcon.setAttribute("data-lucide", "moon");
+            } else {
+                html.classList.add("dark");
+                themeIcon.setAttribute("data-lucide", "sun");
+            }
+            lucide.createIcons();
+        }
+
+        // Render Topic selector dynamically based on filters
+        function renderTopics() {
+            const grid = document.getElementById("topics-grid");
+            const filterInput = document.getElementById("topic-search").value.toLowerCase();
+            
+            grid.innerHTML = "";
+            
+            const filtered = LaoRouDataset.filter(t => {
+                const matchCat = (selectedCategoryFilter === "all" || t.category === selectedCategoryFilter);
+                const matchText = (t.title.toLowerCase().includes(filterInput) || t.summary.toLowerCase().includes(filterInput));
+                return matchCat && matchText;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="text-sm text-slate-400 py-4 pl-4">沒有找到相關的主題...</div>`;
+                return;
+            }
+
+            filtered.forEach(topic => {
+                const isActive = topic.id === currentTopicId;
+                const card = document.createElement("div");
+                card.className = `flex-shrink-0 w-64 snap-start p-5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+                    isActive 
+                    ? "bg-teal-500/10 border-teal-500 dark:border-teal-400 shadow-md shadow-teal-500/5" 
+                    : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
+                }`;
+                card.onclick = () => {
+                    currentTopicId = topic.id;
+                    renderTopics();
+                    loadTopicToReader(topic.id);
+                };
+
+                let diffBadge = "";
+                if (topic.difficulty === "Easy") diffBadge = "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300";
+                else if (topic.difficulty === "Medium") diffBadge = "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+                else diffBadge = "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                ${topic.category}
+                            </span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-md ${diffBadge}">
+                                ${topic.difficulty}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white line-clamp-1 mb-1">${topic.title}</h4>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 line-clamp-2">${topic.summary}</p>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs text-teal-600 dark:text-teal-400 font-bold">
+                        <span>開啟學習讀本</span>
+                        <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Set category filter and update UI
+        function setCategoryFilter(category) {
+            selectedCategoryFilter = category;
+            const buttons = ["all", "動物", "植物", "科學"];
+            buttons.forEach(btn => {
+                const el = document.getElementById(`cat-btn-${btn}`);
+                if (btn === category) {
+                    el.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-teal-500 text-white transition shadow-sm";
+                } else {
+                    el.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition";
+                }
+            });
+            renderTopics();
+        }
+
+        function filterTopics() {
+            renderTopics();
+        }
+
+        // Load Topic Content into Left-Side Document Viewer
+        function loadTopicToReader(id) {
+            const topic = LaoRouDataset.find(t => t.id === id);
+            if (!topic) return;
+
+            document.getElementById("reader-category").innerText = `${topic.category}科學知識庫`;
+            document.getElementById("reader-title").innerHTML = `${topic.title} <span class="text-xs text-slate-400 block sm:inline sm:ml-2 font-normal">${topic.difficulty} 難度評級</span>`;
+            document.getElementById("reader-summary").innerText = topic.summary;
+
+            // Render Concepts
+            const conceptsContainer = document.getElementById("reader-concepts");
+            conceptsContainer.innerHTML = "";
+            topic.concepts.forEach(concept => {
+                const item = document.createElement("div");
+                item.className = "bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 p-4 rounded-xl";
+                item.innerHTML = `
+                    <h6 class="font-bold text-sm text-teal-600 dark:text-teal-400 mb-1 flex items-center">
+                        <span class="w-1.5 h-1.5 bg-teal-500 rounded-full mr-2"></span>
+                        ${concept.name}
+                    </h6>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${concept.desc}</p>
+                `;
+                conceptsContainer.appendChild(item);
+            });
+
+            // Render Fun Facts
+            const factsContainer = document.getElementById("reader-facts");
+            factsContainer.innerHTML = "";
+            topic.funFacts.forEach(fact => {
+                const li = document.createElement("li");
+                li.innerHTML = fact;
+                factsContainer.appendChild(li);
+            });
+
+            // Re-render LaTeX in document viewer using MathJax
+            if (window.MathJax && window.MathJax.typeset) {
+                window.MathJax.typesetPromise([conceptsContainer, factsContainer]).catch((err) => console.log(err));
+            }
+
+            // Load context-aware Chat Prompts
+            const promptsContainer = document.getElementById("chat-quick-questions");
+            promptsContainer.innerHTML = "";
+            topic.quickQuestions.forEach(q => {
+                const btn = document.createElement("button");
+                btn.className = "px-2.5 py-1 bg-white hover:bg-teal-500 hover:text-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-200 transition text-left max-w-full truncate shadow-sm";
+                btn.innerText = q;
+                btn.onclick = () => {
+                    document.getElementById("chat-input").value = q;
+                    handleUserSubmitMessage(null); // fire search directly
+                };
+                promptsContainer.appendChild(btn);
+            });
+            lucide.createIcons();
+            
+            // Scroll reader back to top
+            document.getElementById("reader-content-body").scrollTop = 0;
+        }
+
+        // Chat AI Copilot Implementation
+        function setAIMode(mode) {
+            aiMode = mode;
+            const localBtn = document.getElementById("mode-btn-local");
+            const geminiBtn = document.getElementById("mode-btn-gemini");
+            const label = document.getElementById("chat-mode-label");
+
+            if (mode === "local") {
+                localBtn.className = "px-2 py-1 font-semibold rounded-md bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 shadow-sm transition";
+                geminiBtn.className = "px-2 py-1 font-semibold rounded-md text-slate-500 dark:text-slate-300 hover:text-slate-700 transition flex items-center space-x-1";
+                label.innerText = "本地精選機制庫答問";
+                showToast("已切換為本地智商模式，快速安全！");
+            } else {
+                geminiBtn.className = "px-2 py-1 font-semibold rounded-md bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 shadow-sm transition flex items-center space-x-1";
+                localBtn.className = "px-2 py-1 font-semibold rounded-md text-slate-500 dark:text-slate-300 hover:text-slate-700 transition";
+                label.innerText = "Gemini Live 科學大腦";
+                showToast("已切換為 Gemini AI 模式，將執行雲端生成！");
+                
+                // If user doesn't have token saved, remind them politely but keep moving
+                if (!userAPIKey) {
+                    addAssistantMessage("你目前使用的是「Gemini Live」模式。如果在本地測試，我將會嘗試使用系統安全金鑰進行對談；若未在測試平台，對話可能會失敗。你隨時可以點擊右上方「齒輪設定」輸入自己的 Gemini API Key 喔！");
+                }
+            }
+        }
+
+        // Append User and AI Messages to UI
+        function addUserMessage(text) {
+            const container = document.getElementById("chat-messages-container");
+            const msg = document.createElement("div");
+            msg.className = "flex items-start space-x-3 justify-end";
+            msg.innerHTML = `
+                <div class="bg-teal-600 text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-[85%] text-sm shadow-sm">
+                    ${text}
+                </div>
+                <div class="w-8 h-8 bg-teal-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
+                    我
+                </div>
+            `;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addAssistantMessage(text, isMarkdown = false) {
+            const container = document.getElementById("chat-messages-container");
+            const msg = document.createElement("div");
+            msg.className = "flex items-start space-x-3";
+            
+            // Format content
+            let htmlContent = text;
+            if (isMarkdown && window.marked) {
+                htmlContent = marked.parse(text);
+            } else {
+                // simple line break formatting
+                htmlContent = text.replace(/\n/g, "<br>");
+            }
+
+            msg.innerHTML = `
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
+                    肉
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-[85%] text-sm shadow-sm leading-relaxed prose prose-sm dark:prose-invert">
+                    ${htmlContent}
+                </div>
+            `;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+            
+            // Re-render LaTeX in new chat message
+            if (window.MathJax && window.MathJax.typeset) {
+                window.MathJax.typesetPromise([msg]).catch((err) => console.log(err));
+            }
+        }
+
+        // Handle Chat Submissions
+        async function handleUserSubmitMessage(event) {
+            if (event) event.preventDefault();
+            
+            const inputEl = document.getElementById("chat-input");
+            const userQuery = inputEl.value.trim();
+            if (!userQuery) return;
+
+            // Clear input
+            inputEl.value = "";
+
+            // Add user message
+            addUserMessage(userQuery);
+
+            if (aiMode === "local") {
+                // Local Router answering
+                setTimeout(() => {
+                    const ans = routeLocalAnswer(userQuery);
+                    addAssistantMessage(ans);
+                }, 400);
+            } else {
+                // Gemini API answering
+                addAssistantLoadingMessage();
+                try {
+                    const ans = await callGeminiAPI(userQuery);
+                    removeAssistantLoadingMessage();
+                    addAssistantMessage(ans, true);
+                } catch (error) {
+                    removeAssistantLoadingMessage();
+                    console.error(error);
+                    addAssistantMessage("抱歉，我現在無法連線至 Gemini AI 核心。請確認你的網路正常，或前往右上方齒輪設定確認你的 API Key 喔！\n\n*(提示：你可以隨時切換回「本地」模式，本地模式不需網路即可快速運作。)*");
+                }
+            }
+        }
+
+        // Assistant loading indicator helper
+        function addAssistantLoadingMessage() {
+            const container = document.getElementById("chat-messages-container");
+            const loader = document.createElement("div");
+            loader.id = "chat-assistant-loader";
+            loader.className = "flex items-start space-x-3";
+            loader.innerHTML = `
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
+                    肉
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-2xl rounded-tl-none px-4 py-3 max-w-[80%] text-sm flex items-center space-x-2">
+                    <span class="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                    <span class="text-xs ml-2">正在研閱影片與科學原理...</span>
+                </div>
+            `;
+            container.appendChild(loader);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeAssistantLoadingMessage() {
+            const loader = document.getElementById("chat-assistant-loader");
+            if (loader) loader.remove();
+        }
+
+        // Local Smart Context Matching answering router (extremely robust mockup answering based on actual dataset)
+        function routeLocalAnswer(query) {
+            const normalized = query.toLowerCase();
+            const currentTopic = LaoRouDataset.find(t => t.id === currentTopicId);
+
+            // 1. Try checking selected topic Q&A list
+            for (let item of currentTopic.qa) {
+                if (normalized.includes(item.q.toLowerCase()) || item.q.toLowerCase().includes(normalized)) {
+                    return item.a;
+                }
+            }
+
+            // 2. Global search Q&A dataset
+            for (let t of LaoRouDataset) {
+                for (let item of t.qa) {
+                    if (normalized.includes(item.q.toLowerCase()) || normalized.includes(t.title.toLowerCase())) {
+                        return `【${t.title}】的專屬解惑：\n\n${item.a}`;
+                    }
+                }
+            }
+
+            // 3. Keyword routing based on primary Lao Rou concepts
+            if (normalized.includes("水熊蟲") || normalized.includes("死不了") || normalized.includes("絕對零度") || normalized.includes("太空")) {
+                const tar = LaoRouDataset.find(t => t.id === "tardigrade");
+                return `**關於水熊蟲死不了的底層科學原因：**\n\n1. **隱生機制**：水分脫去 97%，使生命活動凝固。\n2. **海藻糖分子**：替代水分子結合蛋白質結構。\n3. **Dsup 損害抑制蛋白**：形成物理盾，保護 DNA 不受宇宙射線切斷。\n\n你可以點選左側「水熊蟲的隱生機制」深入學習！`;
+            }
+            if (normalized.includes("捕蠅草") || normalized.includes("20秒") || normalized.includes("動作電位") || normalized.includes("閉合")) {
+                const fly = LaoRouDataset.find(t => t.id === "flytrap");
+                return `**關於捕蠅草智慧計時機制：**\n\n1. **雙重觸發**：第1次觸碰感覺毛會激發局部電位釋放 $\\text{Ca}^{2+}$ 離子。\n2. **離子時鐘**：20 秒內必須有第2次觸碰，累積的 $\\text{Ca}^{2+}$ 才能突破關鍵閾值引發閉合。\n3. **雙穩態反扣**：內側與外側細胞水壓在 0.1 秒內崩潰，產生極速反扣彈性閉合。`;
+            }
+            if (normalized.includes("辣椒") || normalized.includes("辣度") || normalized.includes("上癮") || normalized.includes("內啡肽")) {
+                return `**關於辣椒與人類「上癮」的真相：**\n\n1. **辣不是味覺**：是辣椒素分子結合了人體偵測熱源的 $\\text{TRPV1}$ 受體引發的痛覺。\n2. **內啡肽報酬**：痛覺警報迫使大腦下垂體釋放內啡肽，進而產生快感，這使人產生「受虐快感」上癮。\n3. **最佳解辣法**：喝全脂冰牛奶！牛奶裡的脂肪與酪蛋白能有效把親油性的辣椒素拔除。`;
+            }
+            if (normalized.includes("甘蔗") || normalized.includes("光合作用") || normalized.includes("c4") || normalized.includes("陰謀")) {
+                return `**關於甘蔗的 C4 光合作用與高產原因：**\n\n1. **空間分離**：將二氧化碳先在葉肉細胞固定為草醯乙酸（四碳），再用蘋果酸運到微管束鞘細胞才執行卡爾文暗反應。\n2. **規避光呼吸**：在高溫炎熱強光下，避免了光呼吸帶來的能量耗損，快速積累有機糖分。\n3. **綁架人類**：用頂級的蔗糖擄獲人類，讓人類為其砍伐森林，種成全球重量最高（19億噸）的霸主農作物。`;
+            }
+            if (normalized.includes("駱駝") || normalized.includes("紅血球") || normalized.includes("鼻腔")) {
+                return `**關於駱駝的極端抗旱機制：**\n\n1. **橢圓形彈性紅血球**：在極度脫水、血液濃稠時不易卡死，且能在快速吞水時膨脹 \\(2.4\\) 倍不爆破。\n2. **鼻腔黏膜多褶皺**：能截留冷凝呼出的水氣，並利用吸氣蒸發熱冷卻通往大腦的動脈血液溫度。`;
+            }
+
+            // General informative fallback answer
+            return `這是一個很棒的科學探索問題！\n\n目前你可以點選左側「文庫」切換至當前學習主題（如：${currentTopic.title}），我就能為你帶來該主題最深入的 LaTeX 理論解析與冷知識。或者，你也可以點選右上角 Gemini 切換為即時雲端科學大腦對答喔！`;
+        }
+
+        // Real Gemini 2.5 Flash API Implementation with backoff retries & instruction guarding
+        async function callGeminiAPI(userQuery) {
+            const currentTopic = LaoRouDataset.find(t => t.id === currentTopicId);
+            const apiKeyToUse = userAPIKey || ""; // Empty string triggers browser environment key injection
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKeyToUse}`;
+
+            // Format comprehensive system prompt containing structural information of Lao Rou transcripts
+            const systemPrompt = `你是一個專業、親切的自然科學教師「老肉」，專門解答學生的科普問題。
+請遵循以下背景脈絡進行繁體中文問答：
+【當前主題：《${currentTopic.title}》】
+導讀精華：${currentTopic.summary}
+核心機制概念：${JSON.stringify(currentTopic.concepts)}
+科普趣味冷知識：${JSON.stringify(currentTopic.funFacts)}
+
+你的回答必須：
+1. 語氣像知識型 YouTuber 老肉，親切幽默，開場可用「大家好，我是老肉...」
+2. 如果涉及數學、化學、物理公式，必須使用標準 LaTeX 格式（例如 inline $CO_2$ 或 display $$C_4$$）。
+3. 如果學生問題和當前主題或自然科學無關，請溫柔幽默地引導回科學學習。`;
+
+            const payload = {
+                contents: [
+                    {
+                        parts: [
+                            { text: `問題：${userQuery}` }
+                        ]
+                    }
+                ],
+                systemInstruction: {
+                    parts: [
+                        { text: systemPrompt }
+                    ]
+                }
+            };
+
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            };
+
+            // Implement robust fetch with exponential backoff up to 5 retries
+            const responseData = await fetchWithRetry(url, options);
+            const textResponse = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!textResponse) {
+                throw new Error("Invalid response format from Gemini API");
+            }
+            return textResponse;
+        }
+
+        // Retry with backoff helper
+        async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                }
+                return await response.json();
+            } catch (error) {
+                if (retries > 0) {
+                    // console.log(`API retry triggered in science hub: ${retries} attempts left`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                }
+                throw error;
+            }
+        }
+
+        // Settings Dialog Controls
+        function openSettings() {
+            document.getElementById("settings-modal").classList.remove("hidden");
+        }
+
+        function closeSettings() {
+            document.getElementById("settings-modal").classList.add("hidden");
+        }
+
+        function saveSettings() {
+            const val = document.getElementById("api-key-input").value.trim();
+            userAPIKey = val;
+            sessionStorage.setItem("gemini_api_key", val);
+            closeSettings();
+            showToast("Gemini API Key 變更儲存成功！");
+        }
+
+        // Flashcards data structure
+        const FlashcardDataset = [
+            { cat: "隱生與抗性生命", term: "隱生機制 (Cryptobiosis)", def: "當水分完全喪失、無氧、絕對低溫等極端環境發生時，水熊蟲等生命將自身含水量脫去 97%，暫停任何化學活性，基因鏈條在無能耗狀態下無限鎖定以求生。", origin: "老肉雜談：水熊蟲篇" },
+            { cat: "植物計時鐘", term: "鈣離子時鐘 ($\\text{Ca}^{2+}$ Clock)", def: "捕蠅草感覺毛在 20 秒內必須遭受二次連續觸碰，才能使細胞中的 $\\text{Ca}^{2+}$ 累積濃度達到啟動閾值，藉此過濾風吹、落葉等非獵物性自然干擾。", origin: "老肉雜談：捕蠅草篇" },
+            { cat: "生物結構色", term: "虹彩結構色 (Structural Color)", def: "並非靠藍色色素（自然界缺乏藍色有機色素），而是透過幾何奈米級微結構（如魚鱗或水蜜桃上的微孔、白霜）多重折射特定波長光波形成的物理發藍現象。例如鬼頭刀與藍莓。", origin: "老肉雜談：鯕鰍/藍莓篇" },
+            { cat: "痛覺感受器", term: "TRPV1 受體", def: "全身上下廣泛分佈的敏感熱原與燙傷感知通道。辣椒素分子能欺騙此受體、發射假高溫燙傷痛覺給大腦，從而驅使內啡肽大量分泌形成微甜受虐快感。", origin: "老肉雜談：辣椒篇" },
+            { cat: "極效光合作用", term: "C4 途徑 (C4 Pathway)", def: "高溫下普通 $C_3$ 植物會產生自毀性的「光呼吸」。$C_4$ 植物（如甘蔗）透過將二氧化碳固定與暗反應在空間上完全分離（蘋果酸轉運），阻隔氧氣，提高蔗糖產出速度。", origin: "老肉雜談：甘蔗篇" },
+            { cat: "致命致命病", term: "次甘氨酸A (Hypoglycin A)", desc: "荔枝果肉（尤其是未熟果）中含有的微量有機酸，會嚴重抑制人體肝臟合成葡萄糖、燃燒糖原，造成空腹幼童在深夜發生極度低血糖引發的致命性急性腦炎病變。", origin: "老肉雜談：荔枝篇" },
+            { cat: "極端攜氧能力", term: "橢圓彈性紅血球", def: "駱駝紅血球呈橢圓狀且膜彈性驚人。在血液嚴重粘稠時能順滑穿過毛細血管防止栓塞，且能承受短時間暴飲 150 升水帶來的血液急速稀釋與 2.4 倍膨脹而不破裂。", origin: "老肉雜談：駱駝篇" },
+            { cat: "極致能效休眠", term: "折伏休眠 (Torpor)", def: "蜂鳥為對抗極高基礎代謝（心跳達 1000 次/分），在黑夜無法採蜜時會主動關機，將體溫由 40°C 驟降至 18°C 甚至冰點、心跳降至 50 次，進入冬眠般的降耗狀態。", origin: "老肉雜談：蜂鳥篇" },
+            { cat: "假果實構造", term: "膨大花托 (Receptacle)", def: "草莓好吃的紅潤果肉在生物學上並非果實，而是膨大變態的「花托」。真正的草莓果實是附著在花托表面、被誤人為種子的「小芝麻粒」（聚合瘦果）。", origin: "老肉雜談：草莓篇" },
+            { cat: "輔助呼吸器官", term: "迷鰓器官 (Labyrinth Organ)", def: "鬥魚（攀鱸亞目）在長年缺氧的死水中，利用第一對鰓弓上特化的上鰓骨，形成充滿微細血管的「迷宮摺皺」，可直接在水面吸入空氣交換氧氣防止淹死。", origin: "老肉雜談：鬥魚篇" }
+        ];
+
+        // Init Flashcards
+        function initFlashcards() {
+            updateFlashcardUI();
+        }
+
+        function updateFlashcardUI() {
+            const card = FlashcardDataset[currentFlashcardIndex];
+            document.getElementById("card-category").innerText = card.cat;
+            document.getElementById("card-term").innerHTML = card.term;
+            document.getElementById("card-definition").innerHTML = card.def;
+            document.getElementById("flashcard-index").innerText = `${currentFlashcardIndex + 1} / ${FlashcardDataset.length}`;
+            
+            // Re-render LaTeX definitions
+            if (window.MathJax && window.MathJax.typeset) {
+                window.MathJax.typesetPromise([document.getElementById("card-term"), document.getElementById("card-definition")]).catch((err) => console.log(err));
+            }
+        }
+
+        function flipCurrentCard() {
+            const inner = document.getElementById("flashcard-inner");
+            if (inner.classList.contains("rotate-y-180")) {
+                inner.classList.remove("rotate-y-180");
+            } else {
+                inner.classList.add("rotate-y-180");
+            }
+        }
+
+        function prevFlashcard() {
+            // Reset rotation first to avoid jump animation
+            document.getElementById("flashcard-inner").classList.remove("rotate-y-180");
+            setTimeout(() => {
+                currentFlashcardIndex = (currentFlashcardIndex - 1 + FlashcardDataset.length) % FlashcardDataset.length;
+                updateFlashcardUI();
+            }, 150);
+        }
+
+        function nextFlashcard() {
+            document.getElementById("flashcard-inner").classList.remove("rotate-y-180");
+            setTimeout(() => {
+                currentFlashcardIndex = (currentTopicId - 1 + FlashcardDataset.length) % FlashcardDataset.length;
+                currentFlashcardIndex = (currentFlashcardIndex + 1) % FlashcardDataset.length;
+                updateFlashcardUI();
+            }, 150);
+        }
+
+        // Dynamic Self-Assessment Quiz Questions (Generated directly matching Lao Rou topics)
+        const MasterQuizPool = [
+            {
+                q: "水熊蟲能在太空中存活，是因為其體內產生了哪種特異基因保護蛋白，能在 DNA 外部包覆一層「物理防護罩」？",
+                options: [
+                    "A. TRPV1 保護通道蛋白",
+                    "B. Dsup 損害抑制蛋白 (Damage Suppressor)",
+                    "C. 熒光素催化輔助酶",
+                    "D. 草醯乙酸高抗水解蛋白"
+                ],
+                correct: 1,
+                points: 10
+            },
+            {
+                q: "捕蠅草要判定是否將葉片閉合，核心是利用哪種化學離子，在 20 秒內執行「兩次累積疊加計時」？",
+                options: [
+                    "A. 鉀離子 (K+)",
+                    "B. 鈉離子 (Na+)",
+                    "C. 鈣離子 (Ca2+)",
+                    "D. 氯離子 (Cl-)"
+                ],
+                correct: 2,
+                points: 10
+            },
+            {
+                q: "我們吃辣椒之所以會產生「灼燒、燙傷、飆汗」的痛覺，是因為辣椒素分子結合了人體感知溫度的哪一種關鍵受體？",
+                options: [
+                    "A. TRPV1 受體",
+                    "B. RuBisCO 催化碳受體",
+                    "C. Dsup 精密核糖受體",
+                    "D. 醋酸低溫抑制受體"
+                ],
+                correct: 0,
+                points: 10
+            },
+            {
+                q: "甘蔗之所以能超越玉米和小麥成為全球產量最高的霸主作物，是因為它進化出了哪一種高效光合作用途徑，在高溫炎熱下能避免「光呼吸」耗損？",
+                options: [
+                    "A. CAM 景天酸代謝途徑",
+                    "B. 普通 C3 磷酸甘油途徑",
+                    "C. C4 光合作用途徑",
+                    "D. 低溫水楊酸代謝途徑"
+                ],
+                correct: 2,
+                points: 10
+            },
+            {
+                q: "空腹狀態下過度食用未熟的荔枝可能導致致命危險。這與荔枝中含有的哪種特定物質（會抑制人體正常合成葡萄糖）有關？",
+                options: [
+                    "A. 天竹葵色素",
+                    "B. 次甘氨酸 A (Hypoglycin A)",
+                    "C. 生漆酚與漆黃素",
+                    "D. 蘋果酸脫氫阻斷劑"
+                ],
+                correct: 1,
+                points: 10
+            },
+            {
+                q: "駱駝在極度脫水且血液黏稠度高時，紅血球依然能順暢流動，是因為其紅血球細胞具有何種特異性幾何外觀與高彈性？",
+                options: [
+                    "A. 橢圓形",
+                    "B. 正圓盤形",
+                    "C. 鐮刀星芒形",
+                    "D. 雙凹圓餅形"
+                ],
+                correct: 0,
+                points: 10
+            },
+            {
+                q: "草莓好吃的紅色果肉，在生物學定義中，其實並非真正的「果實」本身，而是發育自植物的哪一項解剖構造？",
+                options: [
+                    "A. 膨大的外子房壁",
+                    "B. 特化的胚珠胚乳",
+                    "C. 膨大且高度多汁的「花托」",
+                    "D. 纖維化的中央葉柄"
+                ],
+                correct: 2,
+                points: 10
+            }
+        ];
+
+        function startQuiz() {
+            // Shuffle and pick 5 questions
+            const shuffled = [...MasterQuizPool].sort(() => 0.5 - Math.random());
+            activeQuizQuestions = shuffled.slice(0, 5);
+            currentQuizIndex = 0;
+            quizScore = 0;
+
+            document.getElementById("quiz-intro-state").classList.add("hidden");
+            document.getElementById("quiz-result-state").classList.add("hidden");
+            document.getElementById("quiz-play-state").classList.remove("hidden");
+
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const q = activeQuizQuestions[currentQuizIndex];
+            document.getElementById("quiz-progress-text").innerText = `問題 ${currentQuizIndex + 1} / 5`;
+            document.getElementById("quiz-current-points").innerText = `當前得分：${quizScore}`;
+            document.getElementById("quiz-question-text").innerText = q.q;
+
+            const optionsContainer = document.getElementById("quiz-options-container");
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "w-full text-left px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 text-sm font-medium transition duration-200 flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span><span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] shrink-0"></span>`;
+                btn.onclick = () => selectQuizOption(btn, idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Disable Next button until selection
+            const nextBtn = document.getElementById("quiz-next-btn");
+            nextBtn.disabled = true;
+            nextBtn.className = "px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 font-semibold rounded-xl transition cursor-not-allowed";
+        }
+
+        function selectQuizOption(selectedBtn, optionIndex) {
+            const q = activeQuizQuestions[currentQuizIndex];
+            const optionsContainer = document.getElementById("quiz-options-container");
+            const buttons = optionsContainer.getElementsByTagName("button");
+
+            // Disable clicking other options
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            const isCorrect = optionIndex === q.correct;
+            if (isCorrect) {
+                quizScore += 10;
+                selectedBtn.className = "w-full text-left px-5 py-3 border border-green-500 bg-green-500/10 text-green-700 dark:text-green-400 rounded-xl text-sm font-bold flex items-center justify-between";
+                selectedBtn.innerHTML += `<i data-lucide="check-circle" class="w-5 h-5 text-green-500 shrink-0"></i>`;
+                showToast("答對了！恭喜獲得 10 分！");
+            } else {
+                selectedBtn.className = "w-full text-left px-5 py-3 border border-rose-500 bg-rose-500/10 text-rose-700 dark:text-rose-400 rounded-xl text-sm font-bold flex items-center justify-between";
+                selectedBtn.innerHTML += `<i data-lucide="x-circle" class="w-5 h-5 text-rose-500 shrink-0"></i>`;
+                
+                // Highlight correct answer
+                buttons[q.correct].className = "w-full text-left px-5 py-3 border border-green-500 bg-green-500/10 text-green-700 dark:text-green-400 rounded-xl text-sm font-bold flex items-center justify-between";
+                showToast("可惜答錯了，再接再厲！");
+            }
+
+            // Update score display instantly
+            document.getElementById("quiz-current-points").innerText = `當前得分：${quizScore}`;
+
+            // Enable next button
+            const nextBtn = document.getElementById("quiz-next-btn");
+            nextBtn.disabled = false;
+            nextBtn.className = "px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-md shadow-teal-600/15 transition cursor-pointer";
+            lucide.createIcons();
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < activeQuizQuestions.length) {
+                loadQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById("quiz-play-state").classList.add("hidden");
+            document.getElementById("quiz-result-state").classList.remove("hidden");
+
+            document.getElementById("quiz-result-points").innerText = `${quizScore} / 50 分`;
+
+            // Score interpretation & updating total score badge
+            const totalScoreBadge = document.getElementById("total-score-badge");
+            const currentBadgeDesc = document.getElementById("score-badge-desc");
+            const badgeIcon = document.getElementById("badge-icon-frame");
+            const badgeTitle = document.getElementById("badge-title");
+            const badgeDesc = document.getElementById("badge-desc");
+
+            totalScoreBadge.innerText = quizScore;
+
+            if (quizScore >= 40) {
+                currentBadgeDesc.innerText = "荒野探險家";
+                badgeIcon.innerText = "🦎";
+                badgeTitle.innerText = "荒野探險家";
+                badgeDesc.innerText = `累計答對 4 題以上科學測驗 (得分：${quizScore})`;
+                document.getElementById("quiz-feedback-text").innerText = "太猛了！你完美的吸收了所有影片科學原理。你已經解鎖了「荒野探險家」科學勳章！";
+            } else if (quizScore >= 10) {
+                currentBadgeDesc.innerText = "科學新秀";
+                badgeIcon.innerText = "🌿";
+                badgeTitle.innerText = "科學新秀";
+                badgeDesc.innerText = `累計答對 1-3 題科學測驗 (得分：${quizScore})`;
+                document.getElementById("quiz-feedback-text").innerText = "做得好！對各種生物與物理適應機制有了不錯的掌握。再挑戰一次，解鎖最高榮耀！";
+            } else {
+                currentBadgeDesc.innerText = "科學新手";
+                badgeIcon.innerText = "🌱";
+                badgeTitle.innerText = "科學新手";
+                badgeDesc.innerText = "累計答對 0 題科學測驗";
+                document.getElementById("quiz-feedback-text").innerText = "別灰心！科學研究就是一次次挫折堆砌出來的。多看看左側文庫的 LaTeX 概念解析，一定能突飛猛進！";
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("quiz-result-state").classList.add("hidden");
+            document.getElementById("quiz-intro-state").classList.remove("hidden");
+        }
+
+        // Toggle Accordion FAQs with simple transition logic
+        function toggleFAQ(index) {
+            const content = document.getElementById(`faq-content-${index}`);
+            const chevron = document.getElementById(`faq-chevron-${index}`);
+
+            if (content.classList.contains("hidden")) {
+                content.classList.remove("hidden");
+                chevron.classList.add("rotate-180");
+            } else {
+                content.classList.add("hidden");
+                chevron.classList.remove("rotate-180");
+            }
+        }
+
+        // Toast notification helper
+        function showToast(text) {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = "px-4 py-3 bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 text-xs font-bold rounded-2xl shadow-xl flex items-center space-x-2 animate-bounce";
+            toast.innerHTML = `
+                <div class="p-1 bg-teal-500 rounded-full text-white shrink-0">
+                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                </div>
+                <span>${text}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove("animate-bounce");
+                toast.classList.add("opacity-0", "transition-opacity", "duration-500");
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Export Science Content Study Guide as beautiful Markdown file
+        function exportStudyGuide() {
+            const topic = LaoRouDataset.find(t => t.id === currentTopicId);
+            if (!topic) return;
+
+            let md = `# 科普讀書筆記：《${topic.title}》\n\n`;
+            md += `*老肉雜談自然與生物科學系列精華筆記*\n`;
+            md += `難度評級：${topic.difficulty} | 分類：${topic.category}\n\n`;
+            md += `## 💡 主題摘要\n${topic.summary}\n\n`;
+            md += `## 🧬 核心科學概念\n`;
+            
+            topic.concepts.forEach(concept => {
+                md += `### 📌 ${concept.name}\n${concept.desc}\n\n`;
+            });
+
+            md += `## 🔍 課外延伸冷知識\n`;
+            topic.funFacts.forEach(fact => {
+                md += `- ${fact}\n`;
+            });
+
+            md += `\n---\n*由「老肉雜談：自然與生物科普學習庫」學生工作區生成匯出。*`;
+
+            const blob = new Blob([md], { type: "text/markdown;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", `${topic.id}_study_guide.md`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast("Markdown 讀書筆記匯出成功！快去印出來複習吧！");
+        }
+    </script>
+</body>
+</html>
